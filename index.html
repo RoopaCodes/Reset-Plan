@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>My Life Plan</title>
+<meta name="theme-color" content="#7C5CFC">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Life Plan">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=DM+Sans:wght@400;500;700&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF0F7; --card:#FFFFFF; --ink:#1E2447; --muted:#5D6488; --line:#D9DCEB;
+  --accent:#F0A81E; --accent-ink:#3B2A00; --good:#22796F; --bad:#B8385E; --soft:#E3E6F4;
+  --serif:'Young Serif',Georgia,serif; --sans:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif; --hand:'Caveat','Segoe Script',cursive;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg:#12152B;--card:#1B1F3D;--ink:#EDEEFA;--muted:#9EA4C9;--line:#2D3260;--accent:#F5B93A;--accent-ink:#2A1D00;--good:#4FC3B4;--bad:#F07C9C;--soft:#252A52}
+}
+:root[data-theme="dark"]{--bg:#12152B;--card:#1B1F3D;--ink:#EDEEFA;--muted:#9EA4C9;--line:#2D3260;--accent:#F5B93A;--accent-ink:#2A1D00;--good:#4FC3B4;--bad:#F07C9C;--soft:#252A52}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;-webkit-text-size-adjust:100%}
+main{max-width:720px;margin:0 auto;padding:20px 16px 110px}
+h1,h2,h3{font-family:var(--serif);font-weight:400;margin:0;line-height:1.2}
+h1{font-size:30px} h2{font-size:22px;margin-bottom:10px} h3{font-size:17px;margin-bottom:6px}
+p{margin:0 0 8px}
+.muted{color:var(--muted)} .small{font-size:13px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.between{justify-content:space-between}
+.grow{flex:1;min-width:0}
+input,select,textarea,button{font:inherit;color:inherit}
+input,select,textarea{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;min-width:0}
+input:focus,select:focus,textarea:focus,button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+textarea{resize:vertical;min-height:120px}
+.hand{font-family:var(--hand);font-size:22px;line-height:1.3}
+button{cursor:pointer;border:0;border-radius:10px;padding:10px 16px;background:var(--ink);color:var(--bg);font-weight:700}
+button.accent{background:var(--accent);color:var(--accent-ink)}
+button.ghost{background:transparent;color:var(--muted);padding:6px 10px;font-weight:500;border:1px solid var(--line)}
+button.x{background:transparent;color:var(--muted);padding:4px 8px;font-weight:400;font-size:18px;line-height:1}
+.field{display:flex;flex-direction:column;gap:4px;flex:1;min-width:110px}
+.field label{font-size:13px;color:var(--muted)}
+.item{display:flex;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.item:first-child{border-top:0}
+.check{display:flex;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--line);cursor:pointer}
+.check:first-of-type{border-top:0}
+.check input{width:22px;height:22px;accent-color:var(--good);flex:none;padding:0}
+.check.done span{text-decoration:line-through;color:var(--muted)}
+.bar{height:10px;border-radius:99px;background:var(--soft);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--good);border-radius:99px;transition:width .4s}
+.bar.gold i{background:var(--accent)}
+.pill{display:inline-block;padding:2px 10px;border-radius:99px;background:var(--soft);font-size:13px}
+.hero{background:var(--ink);color:var(--bg);border-radius:20px;padding:22px;margin-bottom:14px}
+.hero .muted{color:var(--bg);opacity:.75}
+.big{font-family:var(--serif);font-size:44px;line-height:1}
+.week{display:flex;gap:6px;margin-top:14px}
+.week div{flex:1;text-align:center;font-size:12px}
+.week b{display:block;height:8px;border-radius:99px;background:rgba(255,255,255,.2);margin-bottom:4px}
+.week b.on{background:var(--accent)}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:center;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));z-index:5}
+nav div{display:flex;max-width:720px;width:100%}
+nav button{flex:1;background:transparent;color:var(--muted);padding:8px 2px;font-size:12px;font-weight:500;border-radius:10px}
+nav button[aria-current="true"]{background:var(--soft);color:var(--ink);font-weight:700}
+.scroll{overflow-x:auto}
+.warn{border-left:4px solid var(--accent);background:var(--soft);border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:14px}
+.callout{border-left:4px solid var(--good);background:var(--soft);border-radius:8px;padding:10px 12px;margin:10px 0}
+details{border-top:1px solid var(--line);padding:10px 0}
+details:first-of-type{border-top:0}
+summary{cursor:pointer;font-weight:700}
+ul{margin:6px 0 0;padding-left:20px} li{margin-bottom:4px}
+.entry{border-top:1px solid var(--line);padding:12px 0}
+.entry:first-child{border-top:0}
+table{border-collapse:collapse;width:100%;font-size:14px} td,th{text-align:left;padding:6px 8px;border-top:1px solid var(--line);vertical-align:top}
+.chip{background:var(--soft);border:1px solid var(--line);color:var(--ink);font-weight:500;padding:6px 12px;border-radius:99px;font-size:14px}
+.cat{display:flex;align-items:center;gap:10px;font-size:14px;margin:6px 0}
+.cat span:first-child{width:96px;flex:none}
+/* ---- colour layer ---- */
+body[data-tab="today"]{--tab:#7C5CFC;--tab2:#E64FA0}
+body[data-tab="diary"]{--tab:#E64FA0;--tab2:#F2617A}
+body[data-tab="body"]{--tab:#14A38B;--tab2:#3DBE6C}
+body[data-tab="money"]{--tab:#F5A524;--tab2:#F2617A}
+body[data-tab="career"]{--tab:#2F8BF5;--tab2:#7C5CFC}
+body[data-tab="hustle"]{--tab:#F2617A;--tab2:#F5A524}
+body[data-tab="plan"]{--tab:#7C5CFC;--tab2:#2F8BF5}
+body{background:linear-gradient(180deg,color-mix(in srgb,var(--tab) 20%,var(--bg)) 0,var(--bg) 340px) no-repeat,var(--bg);background-color:var(--bg)}
+.card{border-top:5px solid var(--tab);box-shadow:0 6px 18px -12px var(--tab)}
+h1{color:var(--tab);font-size:34px}
+h2::before{content:"";display:inline-block;width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,var(--tab),var(--tab2));margin-right:9px;vertical-align:1px}
+.bar{height:12px}
+.bar i,.bar.gold i{background:linear-gradient(90deg,var(--tab),var(--tab2))}
+.check input{accent-color:var(--tab)}
+button.accent{background:linear-gradient(135deg,var(--tab),var(--tab2));color:#fff}
+.hero{background:linear-gradient(135deg,#7C5CFC 0%,#E64FA0 55%,#F5A524 100%);color:#fff;box-shadow:0 12px 28px -14px #E64FA0}
+.hero .muted{color:#fff;opacity:.9}
+.week b.on{background:#fff}
+.glance .field{border-radius:14px;padding:12px;color:#fff}
+.glance .field:nth-child(1){background:#0F8C78}
+.glance .field:nth-child(2){background:#B36B00}
+.glance .field:nth-child(3){background:#2277D6}
+.glance .muted{color:rgba(255,255,255,.88)}
+.glance b{font-size:20px}
+nav button[aria-current="true"]{background:var(--c);color:#fff}
+nav button{border-bottom:3px solid transparent}
+nav button::before{content:"";display:block;width:8px;height:8px;border-radius:50%;background:var(--c);margin:0 auto 3px}
+nav button[aria-current="true"]::before{background:#fff}
+.pill{background:color-mix(in srgb,var(--tab) 18%,var(--card))}
+.callout{border-left-color:var(--tab)}
+.chip{border-color:var(--tab)}
+details summary{color:var(--tab)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<nav aria-label="Sections"><div id="nav"></div></nav>
+
+<script>
+(function(){
+var KEY='my-life-plan-v1', storageOk=true;
+var TABS=[['today','Today'],['diary','Diary'],['body','Body'],['money','Money'],['career','Career'],['hustle','Hustle'],['plan','Plan']];
+var tab='today';
+
+var HABITS=[
+ ['workout','Workout or 30-min brisk walk'],
+ ['steps','8-10k steps'],
+ ['diet','Ate to plan: protein each meal, no sugary drinks, no late snacks'],
+ ['water','3 litres of water'],
+ ['study','2-3 hours of job prep'],
+ ['post','30 min on LetterTales'],
+ ['money','Logged today\'s spending']
+];
+var ROADMAP=[
+ ['Weeks 1-2: Python, Bash and Git',[['d1','Python basics: variables, loops, functions, lists and dicts'],['d2','Python files, error handling, modules and pip'],['d3','Python for ops: os, subprocess, requests, json, yaml'],['d4','Bash refresh: loops, cron, grep, awk, sed'],['d5','Git and GitHub: branch, merge, pull request'],['d6','PROJECT 1 on GitHub: server health check and log analyser with email or Slack alert']]],
+ ['Weeks 3-4: Ansible',[['d7','Inventory, ad-hoc commands, your first playbooks'],['d8','Variables, loops, conditionals, handlers, Jinja2 templates'],['d9','Roles, Ansible Vault, Galaxy collections'],['d10','Try the VMware or Nutanix Ansible collections in your lab'],['d11','PROJECT 2 on GitHub: roles that configure Linux servers and deploy Nginx plus an app']]],
+ ['Week 5: Docker and CI/CD',[['d12','Docker images, containers, volumes, networks'],['d13','Write a Dockerfile and docker-compose for an app'],['d14','CI/CD pipeline with GitHub Actions or Jenkins: build, test, push image']]],
+ ['Week 6: Kubernetes and monitoring',[['d15','Kubernetes basics on kind or minikube: pods, deployments, services, configmaps'],['d16','Deploy your app to Kubernetes from the pipeline'],['d17','Prometheus and Grafana: one dashboard and one alert'],['d18','PROJECT 3 on GitHub: pipeline + Docker + Kubernetes + monitoring, with a README diagram']]],
+ ['Week 7: Cloud and Terraform',[['d19','AWS free tier: IAM, EC2, VPC, S3'],['d20','Terraform: write, plan and apply a VM with a network'],['d21','Choose one certificate to take later: AWS Cloud Practitioner, Terraform Associate or CKA']]],
+ ['Week 8: SRE thinking and interviews',[['d22','Learn SLI, SLO and error budgets'],['d23','Write a blameless postmortem for a real past incident of yours'],['d24','Practise the "server is slow" drill: CPU, memory, disk, network, logs'],['d25','Prepare 5 stories from your support work: incident, automation, troubleshooting'],['d26','3 mock interviews done']]],
+ ['Job hunt: start in week 3, not week 8',[['j1','Resume: one page, with automation and incident wins in numbers'],['j2','LinkedIn headline says Linux, VMware, Ansible, Python, moving to DevOps/SRE'],['j3','Applying to 5 roles daily'],['j4','Messaged 10 people for referrals'],['j5','Asked your current company about an internal automation or infra team']]]
+];
+var MILESTONES=[[74,'Month 2-3'],[68,'Month 5'],[60,'Goal']];
+var CATS=['Food','Travel','Bills','Debt EMI','Shopping','Health','Other'];
+var STATUS=['Applied','Interview','Offer','Rejected'];
+var IDEA_STEPS=['Idea','Ready','Done'];
+
+function defaults(){return {habits:{},diary:[],weights:[],height:'',debts:[],expenses:[],goals:{emergency:{target:15000,saved:0},wedding:{budget:0,saved:0}},career:{role:'',done:{},apps:[]},ideas:[],lastBackup:0}}
+function load(){try{var r=localStorage.getItem(KEY);if(r){var d=JSON.parse(r),b=defaults();for(var k in b){if(d[k]===undefined)d[k]=b[k]}return d}}catch(e){storageOk=false}return defaults()}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){storageOk=false}}
+var S=load();
+if(!S.career.role)S.career.role='DevOps / SRE Engineer';
+
+function uid(){return Math.random().toString(36).slice(2,9)}
+function todayStr(){return new Date().toLocaleDateString('en-CA')}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function inr(n){return '\u20B9'+Math.round(n||0).toLocaleString('en-IN')}
+function fdate(d){return new Date(d+'T00:00').toLocaleDateString('en-IN',{day:'numeric',month:'short'})}
+function num(v){var n=parseFloat(v);return isNaN(n)?0:n}
+function daysAgo(n){var d=new Date();d.setDate(d.getDate()-n);return d.toLocaleDateString('en-CA')}
+function doneCount(d){var h=S.habits[d]||{};return HABITS.filter(function(x){return h[x[0]]}).length}
+function streak(){var s=0,i=doneCount(todayStr())>=5?0:1;for(;;i++){if(doneCount(daysAgo(i))>=5)s++;else break;if(i>400)break}return s}
+function bar(p,cls){p=Math.max(0,Math.min(100,p));return '<div class="bar '+(cls||'')+'" role="progressbar" aria-valuenow="'+Math.round(p)+'" aria-valuemin="0" aria-valuemax="100"><i style="width:'+p+'%"></i></div>'}
+
+/* ---------- views ---------- */
+function vToday(){
+  var t=todayStr(), h=S.habits[t]||{}, n=doneCount(t), st=streak();
+  var hr=new Date().getHours(), greet=hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
+  var strip='';
+  for(var i=6;i>=0;i--){var d=daysAgo(i),c=doneCount(d);strip+='<div><b class="'+(c>=5?'on':'')+'"></b>'+new Date(d+'T00:00').toLocaleDateString('en-IN',{weekday:'short'}).slice(0,2)+'</div>'}
+  var last=S.weights.length?S.weights.slice().sort(function(a,b){return a.date<b.date?-1:1}).pop().kg:null;
+  var html='<h1>'+greet+'</h1><p class="muted">'+new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long'})+'</p><div style="height:14px"></div>';
+  var hasData=S.diary.length||S.weights.length||S.debts.length||S.expenses.length;
+  if(hasData&&(!S.lastBackup||Date.now()-S.lastBackup>7*864e5))html+='<div class="warn">You have not backed up in over a week. Open the Plan tab and tap Copy backup.</div>';
+  html+='<div class="hero"><div class="row between"><div><div class="big">'+n+'/'+HABITS.length+'</div><div class="muted">done today</div></div><div style="text-align:right"><div class="big">'+st+'</div><div class="muted">day streak (5+ done)</div></div></div><div class="week">'+strip+'</div></div>';
+  html+='<div class="card"><h2>Today\'s checklist</h2>';
+  HABITS.forEach(function(x){html+='<label class="check '+(h[x[0]]?'done':'')+'"><input type="checkbox" data-change="habit" data-id="'+x[0]+'" '+(h[x[0]]?'checked':'')+'><span>'+esc(x[1])+'</span></label>'});
+  html+='</div>';
+  html+='<div class="card"><h2>At a glance</h2><div class="row glance">';
+  html+='<div class="field"><span class="muted small">Weight</span><b>'+(last?last+' kg':'Not logged')+'</b></div>';
+  html+='<div class="field"><span class="muted small">Total debt</span><b>'+inr(S.debts.reduce(function(a,d){return a+num(d.amt)},0))+'</b></div>';
+  html+='<div class="field"><span class="muted small">Job prep</span><b>'+roadPct()+'%</b></div></div></div>';
+  html+='<div class="card"><h2>One line for today</h2><p class="muted small">Write it in the Diary tab whenever you like.</p><button class="accent" data-act="tab" data-id="diary">Open diary</button></div>';
+  return html;
+}
+
+function vDiary(){
+  var html='<h1>Diary</h1><p class="muted">Only you can see this. It lives in this browser.</p><div style="height:12px"></div>';
+  html+='<div class="card"><form data-form="diary"><div class="row" style="margin-bottom:10px"><div class="field"><label for="dm">Mood</label><select id="dm" name="mood"><option>Great</option><option selected>Good</option><option>Okay</option><option>Low</option><option>Stressed</option></select></div><div class="field"><label for="dd">Date</label><input id="dd" name="date" type="date" value="'+todayStr()+'"></div></div>';
+  html+='<label class="small muted" for="dt">What happened today? What did you learn or feel?</label><textarea id="dt" name="text" class="hand" required></textarea><div style="height:10px"></div><button class="accent" type="submit">Save entry</button></form></div>';
+  html+='<div class="card"><input type="search" id="dsearch" placeholder="Search your entries" aria-label="Search entries"><div id="dlist"></div></div>';
+  return html;
+}
+function diaryList(q){
+  q=(q||'').toLowerCase();
+  var list=S.diary.filter(function(e){return !q||e.text.toLowerCase().indexOf(q)>-1||e.mood.toLowerCase().indexOf(q)>-1}).sort(function(a,b){return a.date<b.date?1:a.date>b.date?-1:(a.id<b.id?1:-1)});
+  if(!list.length)return '<p class="muted" style="margin-top:12px">'+(S.diary.length?'No entries match that search.':'No entries yet. Write your first one above.')+'</p>';
+  return list.map(function(e){return '<div class="entry"><div class="row between"><span><b>'+fdate(e.date)+'</b> <span class="pill">'+esc(e.mood)+'</span></span><button class="x" data-act="delDiary" data-id="'+e.id+'" aria-label="Delete entry">\u00D7</button></div><p class="hand" style="white-space:pre-wrap;margin-top:6px">'+esc(e.text)+'</p></div>'}).join('');
+}
+
+function vBody(){
+  var ws=S.weights.slice().sort(function(a,b){return a.date<b.date?-1:1});
+  var cur=ws.length?ws[ws.length-1].kg:79, start=79, goal=60;
+  var pct=(start-cur)/(start-goal)*100;
+  var html='<h1>Body</h1><p class="muted">79 kg to 60 kg, at a safe 0.5-0.7 kg a week.</p><div style="height:12px"></div>';
+  html+='<div class="card"><div class="row between"><h2>'+cur+' kg now</h2><span class="muted">'+Math.max(0,(cur-goal)).toFixed(1)+' kg to go</span></div>'+bar(pct)+'<div class="row" style="margin-top:12px">';
+  MILESTONES.forEach(function(m){var ok=cur<=m[0];html+='<span class="pill" style="'+(ok?'background:var(--good);color:var(--bg)':'')+'">'+(ok?'\u2713 ':'')+m[0]+' kg \u00B7 '+m[1]+'</span>'});
+  html+='</div></div>';
+  html+='<div class="card"><h2>Log weight</h2><form data-form="weight" class="row"><div class="field"><label for="wk">Weight (kg)</label><input id="wk" name="kg" type="number" step="0.1" min="30" max="200" required></div><div class="field"><label for="wd">Date</label><input id="wd" name="date" type="date" value="'+todayStr()+'"></div><button class="accent" type="submit">Save</button></form>';
+  html+=chart(ws);
+  if(ws.length){html+='<div style="margin-top:8px">'+ws.slice(-5).reverse().map(function(w){return '<div class="item"><span class="grow">'+fdate(w.date)+'</span><b>'+w.kg+' kg</b><button class="x" data-act="delWeight" data-id="'+w.id+'" aria-label="Delete">\u00D7</button></div>'}).join('')+'</div>'}
+  html+='</div>';
+  var hcm=num(S.height), bmi=hcm?(cur/Math.pow(hcm/100,2)).toFixed(1):null;
+  html+='<div class="card"><h2>Is 60 kg right for you?</h2><div class="field" style="max-width:200px"><label for="ht">Your height (cm)</label><input id="ht" type="number" min="100" max="230" value="'+esc(S.height)+'" data-change="height"></div>';
+  if(hcm){var lo=(18.5*Math.pow(hcm/100,2)).toFixed(0),hi=(24.9*Math.pow(hcm/100,2)).toFixed(0);html+='<div class="callout">Your BMI now is <b>'+bmi+'</b>. The healthy range for '+hcm+' cm is about <b>'+lo+'-'+hi+' kg</b>. '+(60<lo?'60 kg is below that range, so consider a higher goal.':'60 kg sits '+(60<=hi?'inside':'above')+' that range.')+'</div>'}
+  html+='</div>';
+  html+='<div class="card"><h2>Home workout, no gym</h2><div class="scroll"><table><tr><td>Mon, Wed, Fri, Sat</td><td>Strength, 30-40 min</td></tr><tr><td>Tue, Thu</td><td>Brisk walk, 30-40 min</td></tr><tr><td>Sun</td><td>Rest, light stretching</td></tr></table></div><h3 style="margin-top:12px">Strength circuit, 3 rounds</h3><ul><li>15 squats</li><li>10 push-ups (on knees is fine)</li><li>12 lunges each leg</li><li>15 glute bridges</li><li>30-second plank</li></ul><p class="small muted" style="margin-top:8px">Rest 60 seconds between rounds. Add 1-2 reps every week.</p></div>';
+  html+='<div class="card"><h2>Eating plan</h2><ul><li><b>Aim:</b> about 400-500 kcal below what you burn, every day.</li><li><b>Breakfast:</b> eggs, paneer or sprouts with veggies, or 2 idli with sambar.</li><li><b>Lunch:</b> 1 cup rice or 2 rotis, dal, a big portion of vegetables, curd.</li><li><b>Snack:</b> a fruit, buttermilk or sundal.</li><li><b>Dinner:</b> lighter. Protein, vegetables, 1-2 rotis, and finish 2-3 hours before bed.</li><li><b>Cut:</b> sugary drinks, fried snacks, late-night eating.</li></ul></div>';
+  return html;
+}
+function chart(ws){
+  if(ws.length<2)return '<p class="muted small" style="margin-top:10px">Log at least two weights to see your trend line.</p>';
+  var W=600,H=170,P=28, ys=ws.map(function(w){return w.kg}), mn=Math.min(58,Math.min.apply(null,ys))-1, mx=Math.max.apply(null,ys)+1;
+  function X(i){return P+(W-2*P)*(ws.length===1?0:i/(ws.length-1))}
+  function Y(v){return H-P-(H-2*P)*(v-mn)/(mx-mn)}
+  var pts=ws.map(function(w,i){return X(i)+','+Y(w.kg)}).join(' ');
+  var dots=ws.map(function(w,i){return '<circle cx="'+X(i)+'" cy="'+Y(w.kg)+'" r="4" fill="var(--good)"/>'}).join('');
+  return '<div class="scroll"><svg viewBox="0 0 '+W+' '+H+'" style="width:100%;min-width:320px;margin-top:10px" role="img" aria-label="Weight trend chart"><line x1="'+P+'" x2="'+(W-P)+'" y1="'+Y(60)+'" y2="'+Y(60)+'" stroke="var(--accent)" stroke-dasharray="6 5"/><text x="'+P+'" y="'+(Y(60)-6)+'" font-size="12" fill="var(--muted)">Goal 60 kg</text><polyline points="'+pts+'" fill="none" stroke="var(--good)" stroke-width="3" stroke-linejoin="round"/>'+dots+'<text x="'+P+'" y="'+(H-6)+'" font-size="12" fill="var(--muted)">'+fdate(ws[0].date)+'</text><text x="'+(W-P)+'" y="'+(H-6)+'" font-size="12" text-anchor="end" fill="var(--muted)">'+fdate(ws[ws.length-1].date)+'</text></svg></div>';
+}
+
+function vMoney(){
+  var debts=S.debts.slice().sort(function(a,b){return num(b.rate)-num(a.rate)});
+  var totalDebt=debts.reduce(function(a,d){return a+num(d.amt)},0), totalEmi=debts.reduce(function(a,d){return a+num(d.emi)},0);
+  var mo=todayStr().slice(0,7), ex=S.expenses.filter(function(e){return e.date.slice(0,7)===mo});
+  var spent=ex.reduce(function(a,e){return a+num(e.amt)},0);
+  var html='<h1>Money</h1><p class="muted">Clear the costliest debt first. Keep the wedding inside a fixed budget.</p><div style="height:12px"></div>';
+  html+='<div class="card"><h2>Debts</h2>';
+  if(debts.length){
+    html+='<div class="callout">Pay every extra rupee toward <b>'+esc(debts[0].name)+'</b> ('+num(debts[0].rate)+'% interest). Pay minimums on the rest.</div>';
+    html+=debts.map(function(d,i){return '<div class="item"><div class="grow"><b>'+esc(d.name)+'</b>'+(i===0?' <span class="pill" style="background:var(--accent);color:var(--accent-ink)">pay first</span>':'')+'<div class="small muted">'+inr(d.amt)+' \u00B7 '+num(d.rate)+'% \u00B7 EMI '+inr(d.emi)+'</div></div><button class="x" data-act="delDebt" data-id="'+d.id+'" aria-label="Delete debt">\u00D7</button></div>'}).join('');
+    html+='<div class="row between" style="margin-top:8px"><span>Total owed <b>'+inr(totalDebt)+'</b></span><span>Monthly EMIs <b>'+inr(totalEmi)+'</b></span></div>';
+  } else html+='<p class="muted">No debts added yet. Add each one below with its interest rate.</p>';
+  html+='<form data-form="debt" class="row" style="margin-top:12px"><div class="field" style="flex:2"><label for="dn">Name</label><input id="dn" name="name" placeholder="Credit card, friend, loan" required></div><div class="field"><label for="da">Amount (\u20B9)</label><input id="da" name="amt" type="number" min="0" required></div><div class="field"><label for="dr">Interest %/yr</label><input id="dr" name="rate" type="number" step="0.1" min="0" value="0"></div><div class="field"><label for="de">EMI (\u20B9)</label><input id="de" name="emi" type="number" min="0" value="0"></div><button class="accent" type="submit">Add</button></form></div>';
+
+  var g=S.goals;
+  html+='<div class="card"><h2>Savings goals</h2>';
+  html+=goal('emergency','Emergency buffer',g.emergency.target,g.emergency.saved);
+  html+=goal('wedding','Wedding budget cap',g.wedding.budget,g.wedding.saved);
+  html+='<div class="warn">Set a wedding budget you can pay in cash from savings. Avoid borrowing for gold. Talk openly with both families about a simpler plan.</div></div>';
+
+  html+='<div class="card"><h2>Spending this month: '+inr(spent)+'</h2>';
+  var by={};ex.forEach(function(e){by[e.cat]=(by[e.cat]||0)+num(e.amt)});
+  Object.keys(by).sort(function(a,b){return by[b]-by[a]}).forEach(function(c){html+='<div class="cat"><span>'+esc(c)+'</span><span class="grow">'+bar(by[c]/spent*100,'gold')+'</span><span>'+inr(by[c])+'</span></div>'});
+  html+='<form data-form="expense" class="row" style="margin-top:12px"><div class="field"><label for="xa">Amount (\u20B9)</label><input id="xa" name="amt" type="number" min="0" required></div><div class="field"><label for="xc">Category</label><select id="xc" name="cat">'+CATS.map(function(c){return '<option>'+c+'</option>'}).join('')+'</select></div><div class="field" style="flex:2"><label for="xn">Note</label><input id="xn" name="note" placeholder="Optional"></div><button class="accent" type="submit">Add</button></form>';
+  var recent=S.expenses.slice().sort(function(a,b){return a.date<b.date?1:a.date>b.date?-1:(a.id<b.id?1:-1)}).slice(0,8);
+  html+=recent.map(function(e){return '<div class="item"><div class="grow">'+esc(e.cat)+(e.note?' \u00B7 '+esc(e.note):'')+'<div class="small muted">'+fdate(e.date)+'</div></div><b>'+inr(e.amt)+'</b><button class="x" data-act="delExp" data-id="'+e.id+'" aria-label="Delete expense">\u00D7</button></div>'}).join('');
+  html+='</div>';
+  return html;
+}
+function goal(key,label,target,saved){
+  var t=num(target), s=num(saved), p=t?s/t*100:0;
+  return '<div style="margin-bottom:16px"><div class="row between"><b>'+label+'</b><span class="muted small">'+inr(s)+' of '+inr(t)+'</span></div>'+bar(p,'gold')+'<div class="row" style="margin-top:8px"><div class="field"><label for="g'+key+'t">Target (\u20B9)</label><input id="g'+key+'t" type="number" min="0" value="'+t+'" data-change="goalTarget" data-id="'+key+'"></div><div class="field"><label for="g'+key+'s">Saved so far (\u20B9)</label><input id="g'+key+'s" type="number" min="0" value="'+s+'" data-change="goalSaved" data-id="'+key+'"></div></div></div>';
+}
+
+function roadPct(){var all=0,d=0;ROADMAP.forEach(function(g){g[1].forEach(function(i){all++;if(S.career.done[i[0]])d++})});return Math.round(d/all*100)}
+function vCareer(){
+  var html='<h1>Career</h1><p class="muted">From application support to DevOps / SRE. Your Linux, VMware and Nutanix background is a real head start.</p><div style="height:12px"></div>';
+  html+='<div class="card"><div class="field"><label for="role">My target role</label><input id="role" value="'+esc(S.career.role)+'" placeholder="Your target role" data-change="role"></div><div style="margin-top:12px" class="row between"><b>Roadmap progress</b><span>'+roadPct()+'%</span></div>'+bar(roadPct())+'</div>';
+  ROADMAP.forEach(function(g){
+    html+='<div class="card"><h2>'+g[0]+'</h2>';
+    g[1].forEach(function(i){var on=S.career.done[i[0]];html+='<label class="check '+(on?'done':'')+'"><input type="checkbox" data-change="road" data-id="'+i[0]+'" '+(on?'checked':'')+'><span>'+esc(i[1])+'</span></label>'});
+    html+='</div>';
+  });
+  html+='<div class="card"><h2>Applications</h2>';
+  html+=S.career.apps.map(function(a){return '<div class="item"><div class="grow"><b>'+esc(a.co)+'</b><div class="small muted">'+esc(a.role)+' \u00B7 '+fdate(a.date)+'</div></div><select style="width:130px" data-change="appStatus" data-id="'+a.id+'" aria-label="Status">'+STATUS.map(function(s){return '<option'+(s===a.status?' selected':'')+'>'+s+'</option>'}).join('')+'</select><button class="x" data-act="delApp" data-id="'+a.id+'" aria-label="Delete">\u00D7</button></div>'}).join('');
+  html+='<form data-form="app" class="row" style="margin-top:12px"><div class="field"><label for="ac">Company</label><input id="ac" name="co" required></div><div class="field"><label for="ar">Role</label><input id="ar" name="role"></div><button class="accent" type="submit">Add</button></form>';
+  var c={};S.career.apps.forEach(function(a){c[a.status]=(c[a.status]||0)+1});
+  html+='<p class="small muted" style="margin-top:10px">'+S.career.apps.length+' applied'+(c.Interview?' \u00B7 '+c.Interview+' interviews':'')+(c.Offer?' \u00B7 '+c.Offer+' offers':'')+'</p></div>';
+  html+='<div class="card"><h2>Your edge</h2><ul><li>You already know Linux, VMware and Nutanix, which most beginners lack.</li><li>Application support means you have handled real incidents. Interviewers value that for SRE.</li><li>Aim for junior DevOps, SRE, infrastructure automation, cloud or systems engineer roles.</li></ul></div>';
+  html+='<div class="card"><h2>Daily 2.5 hours</h2><ul><li><b>45 min:</b> learn (video or docs)</li><li><b>90 min:</b> hands-on lab. Type every command yourself.</li><li><b>15 min:</b> notes, and one Git commit</li></ul><p class="small muted">Weekends: finish the week\'s project and push it to GitHub.</p></div>';
+  html+='<div class="card"><h2>Free places to learn</h2><ul><li>Python: Automate the Boring Stuff with Python (free online book)</li><li>Ansible: official docs and Jeff Geerling\'s Ansible videos on YouTube</li><li>Docker, Kubernetes, Terraform: their official docs and getting-started tutorials</li><li>SRE: the free Google SRE book at sre.google</li><li>Practice: your own VMs, Docker on your laptop, AWS free tier</li></ul></div>';
+  return html;
+}
+
+var STARTERS=[['Business idea','Personalised letters or gift notes'],['Business idea','Printable or digital templates'],['Business idea','Caption and writing service for small businesses'],['LetterTales post','Story post: a letter to my younger self'],['LetterTales post','Reel: 3 lines that changed how I think']];
+function vHustle(){
+  var html='<h1>Hustle</h1><p class="muted">Grow LetterTales first. Test one small product before spending money.</p><div style="height:12px"></div>';
+  html+='<div class="card"><h2>Add an idea</h2><form data-form="idea" class="row"><div class="field"><label for="ik">Type</label><select id="ik" name="kind"><option>LetterTales post</option><option>Business idea</option></select></div><div class="field" style="flex:3"><label for="it">Idea</label><input id="it" name="text" required></div><button class="accent" type="submit">Add</button></form>';
+  html+='<p class="small muted" style="margin-top:12px">Quick starters, tap to add:</p><div class="row">'+STARTERS.map(function(s,i){return '<button class="chip" data-act="starter" data-id="'+i+'">'+esc(s[1])+'</button>'}).join('')+'</div></div>';
+  ['LetterTales post','Business idea'].forEach(function(k){
+    var l=S.ideas.filter(function(i){return i.kind===k});
+    html+='<div class="card"><h2>'+k+'s</h2>';
+    html+=l.length?l.map(function(i){return '<div class="item"><div class="grow '+(i.status===2?'muted':'')+'" style="'+(i.status===2?'text-decoration:line-through':'')+'">'+esc(i.text)+'</div><button class="ghost" data-act="cycleIdea" data-id="'+i.id+'">'+IDEA_STEPS[i.status]+'</button><button class="x" data-act="delIdea" data-id="'+i.id+'" aria-label="Delete">\u00D7</button></div>'}).join(''):'<p class="muted">Nothing here yet.</p>';
+    html+='</div>';
+  });
+  html+='<div class="card"><h2>Test a business cheaply</h2><ul><li>Pick one small offer, like a personalised letter.</li><li>Post about it on LetterTales and take 3 pre-orders before buying anything.</li><li>If people buy, repeat. If not, change the offer, not the goal.</li><li>Send all first profits to your highest-interest debt.</li></ul></div>';
+  return html;
+}
+
+function vPlan(){
+  var html='<h1>The plan</h1><p class="muted">Everything we agreed, in one place.</p><div style="height:12px"></div><div class="card">';
+  html+='<details open><summary>Priority order</summary><ul><li><b>Job switch:</b> the main engine. A higher salary fixes most money problems.</li><li><b>Health:</b> about 60 min a day, never stops.</li><li><b>Money:</b> set up once, then a 10-minute weekly review.</li><li><b>LetterTales:</b> 30-45 min a day, consistent posting.</li><li><b>Side business:</b> plan now, launch around week 5-6.</li></ul></details>';
+  html+='<details><summary>Daily rhythm</summary><ul><li>Morning: 30-40 min workout or brisk walk</li><li>Evening: 2-3 hours job prep</li><li>30 min: LetterTales content</li><li>Weekends: long study block, weekly money review, batch-create content, meal prep</li></ul></details>';
+  html+='<details><summary>Reality check</summary><ul><li>Job-ready for an entry or mid-level role in 2 months is realistic. "Advanced" is not.</li><li>19 kg takes about 7-9 months at a safe pace.</li><li>Do not start everything at full speed. Stagger the goals.</li></ul></details>';
+  html+='<details><summary>Money rules</summary><ul><li>List every debt with amount, rate and EMI.</li><li>Pay minimums on all, extra on the highest interest.</li><li>Build a \u20B910-15k emergency buffer first.</li><li>Fix a wedding budget cap and plan backward from the date.</li><li>Do not borrow for gold or the wedding.</li><li>Send raises and side income to debt first.</li></ul></details></div>';
+  html+='<div class="card"><h2>Backup your data</h2><p class="small muted">Your entries are saved only in this browser. Copy the backup text and keep it somewhere safe, such as a note to yourself.</p><textarea id="bk" readonly style="min-height:90px;font-size:12px"></textarea><div class="row" style="margin-top:8px"><button class="accent" data-act="copyBackup">Copy backup</button></div><h3 style="margin-top:16px">Restore</h3><textarea id="rs" placeholder="Paste backup text here" style="min-height:70px;font-size:12px"></textarea><div class="row" style="margin-top:8px"><button data-act="restore">Replace my data with this</button><span id="bkmsg" class="small muted" role="status"></span></div></div>';
+  html+='<div class="card"><h2>Appearance</h2><div class="row"><button class="ghost" data-act="theme" data-id="light">Light</button><button class="ghost" data-act="theme" data-id="dark">Dark</button><button class="ghost" data-act="theme" data-id="auto">Match phone</button></div></div>';
+  return html;
+}
+
+/* ---------- render ---------- */
+var VIEWS={today:vToday,diary:vDiary,body:vBody,money:vMoney,career:vCareer,hustle:vHustle,plan:vPlan};
+function render(keepScroll){
+  var y=window.scrollY;
+  var warn=storageOk?'':'<div class="warn">This browser is blocking saving, so your entries will be lost when you close the page. Try opening the link in Chrome or Safari, or use the backup box in Plan.</div>';
+  document.getElementById('app').innerHTML=warn+VIEWS[tab]();
+  document.body.setAttribute('data-tab',tab);
+  var NC={today:'#7C5CFC',diary:'#E64FA0',body:'#14A38B',money:'#D98A00',career:'#2F8BF5',hustle:'#F2617A',plan:'#7C5CFC'};
+  document.getElementById('nav').innerHTML=TABS.map(function(t){return '<button data-act="tab" data-id="'+t[0]+'" style="--c:'+NC[t[0]]+'" aria-current="'+(t[0]===tab)+'">'+t[1]+'</button>'}).join('');
+  if(tab==='diary')document.getElementById('dlist').innerHTML=diaryList('');
+  if(tab==='plan')document.getElementById('bk').value=JSON.stringify(S);
+  window.scrollTo(0,keepScroll?y:0);
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click',function(e){
+  var b=e.target.closest('[data-act]');if(!b)return;
+  var a=b.dataset.act,id=b.dataset.id;
+  if(a==='tab'){tab=id;render();return}
+  if(a==='delDiary')S.diary=S.diary.filter(function(x){return x.id!==id});
+  else if(a==='delWeight')S.weights=S.weights.filter(function(x){return x.id!==id});
+  else if(a==='delDebt')S.debts=S.debts.filter(function(x){return x.id!==id});
+  else if(a==='delExp')S.expenses=S.expenses.filter(function(x){return x.id!==id});
+  else if(a==='delApp')S.career.apps=S.career.apps.filter(function(x){return x.id!==id});
+  else if(a==='delIdea')S.ideas=S.ideas.filter(function(x){return x.id!==id});
+  else if(a==='cycleIdea'){S.ideas.forEach(function(x){if(x.id===id)x.status=(x.status+1)%3})}
+  else if(a==='starter'){var s=STARTERS[+id];S.ideas.push({id:uid(),kind:s[0],text:s[1],status:0})}
+  else if(a==='theme'){var r=document.documentElement;if(id==='auto')r.removeAttribute('data-theme');else r.setAttribute('data-theme',id);return}
+  else if(a==='copyBackup'){var t=document.getElementById('bk'),m=document.getElementById('bkmsg');t.select();var done=function(){S.lastBackup=Date.now();save();m.textContent='Backup copied. Paste it into a note or chat with yourself.'};try{navigator.clipboard.writeText(t.value).then(done,function(){try{document.execCommand('copy');done()}catch(z){m.textContent='Copy failed. Select the text and copy it by hand.'}})}catch(x){try{document.execCommand('copy');done()}catch(y){m.textContent='Copy failed. Select the text and copy it by hand.'}}return}
+  else if(a==='restore'){
+    var v=document.getElementById('rs').value.trim(),msg=document.getElementById('bkmsg');
+    try{var d=JSON.parse(v),bd=defaults();if(typeof d!=='object'||!d)throw 0;for(var k in bd){if(d[k]===undefined)d[k]=bd[k]}S=d;save();tab='today';render();}catch(x){msg.textContent='That text is not a valid backup. Copy it again in full.'}
+    return}
+  save();render(true);
+});
+document.addEventListener('submit',function(e){
+  var f=e.target.closest('[data-form]');if(!f)return;e.preventDefault();
+  var k=f.dataset.form,v=Object.fromEntries(new FormData(f).entries());
+  if(k==='diary'){if(!v.text.trim())return;S.diary.push({id:uid(),date:v.date||todayStr(),mood:v.mood,text:v.text.trim()})}
+  if(k==='weight')S.weights.push({id:uid(),date:v.date||todayStr(),kg:num(v.kg)});
+  if(k==='debt')S.debts.push({id:uid(),name:v.name.trim(),amt:num(v.amt),rate:num(v.rate),emi:num(v.emi)});
+  if(k==='expense')S.expenses.push({id:uid(),date:todayStr(),amt:num(v.amt),cat:v.cat,note:(v.note||'').trim()});
+  if(k==='app')S.career.apps.push({id:uid(),co:v.co.trim(),role:(v.role||'').trim(),status:'Applied',date:todayStr()});
+  if(k==='idea')S.ideas.push({id:uid(),kind:v.kind,text:v.text.trim(),status:0});
+  save();render(true);
+});
+document.addEventListener('change',function(e){
+  var el=e.target.closest('[data-change]');if(!el)return;
+  var c=el.dataset.change,id=el.dataset.id;
+  if(c==='habit'){var t=todayStr();S.habits[t]=S.habits[t]||{};S.habits[t][id]=el.checked}
+  if(c==='road')S.career.done[id]=el.checked;
+  if(c==='role'){S.career.role=el.value;save();return}
+  if(c==='height'){S.height=el.value}
+  if(c==='goalTarget')S.goals[id][id==='wedding'?'budget':'target']=num(el.value);
+  if(c==='goalSaved')S.goals[id].saved=num(el.value);
+  if(c==='appStatus'){S.career.apps.forEach(function(a){if(a.id===id)a.status=el.value})}
+  save();render(true);
+});
+document.addEventListener('input',function(e){
+  if(e.target.id==='dsearch')document.getElementById('dlist').innerHTML=diaryList(e.target.value);
+});
+
+render();
+/* offline + installable */
+try{
+  if('serviceWorker' in navigator&&location.protocol.indexOf('http')===0){navigator.serviceWorker.register('sw.js').catch(function(){})}
+  if(navigator.storage&&navigator.storage.persist){navigator.storage.persist().catch(function(){})}
+}catch(e){}
+})();
+</script>
+</body>
+</html>
