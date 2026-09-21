@@ -473,6 +473,7 @@ function vPlan(){
   html+='<div class="card"><h2>Daily reminder, 10:45 PM</h2><p class="small muted">Tap the button, open the downloaded file, and save it to your calendar. It repeats every day at 10:45 PM and alerts you to log your data.</p><button class="accent" data-act="remind">Add daily 10:45 PM reminder</button><p id="remmsg" class="small muted" role="status" style="margin-top:8px"></p></div>';
   html+='<div class="card"><h2>Backup your data</h2><p class="small muted">Your entries are saved only in this browser. Copy the backup text and keep it somewhere safe, such as a note to yourself. Your motivation photo is not included in the backup.</p><textarea id="bk" readonly style="min-height:90px;font-size:12px"></textarea><div class="row" style="margin-top:8px"><button class="accent" data-act="copyBackup">Copy backup</button></div><h3 style="margin-top:16px">Restore</h3><textarea id="rs" placeholder="Paste backup text here" style="min-height:70px;font-size:12px"></textarea><div class="row" style="margin-top:8px"><button data-act="restore">Replace my data with this</button><span id="bkmsg" class="small muted" role="status"></span></div></div>';
   html+='<div class="card"><h2>Appearance</h2><div class="row"><button class="ghost" data-act="theme" data-id="light">Light</button><button class="ghost" data-act="theme" data-id="dark">Dark</button><button class="ghost" data-act="theme" data-id="auto">Match phone</button></div></div>';
+  html+='<p class="small muted" style="text-align:center">App version 7</p>';
   return html;
 }
 
