@@ -116,6 +116,10 @@ nav button[aria-current="true"]::before{background:#fff}
 .chip{border-color:var(--tab)}
 details summary{color:var(--tab)}
 body[data-tab="diet"]{--tab:#2DB36B;--tab2:#14A38B}
+body[data-tab="track"]{--tab:#0FA3B1;--tab2:#7C5CFC}
+nav div{overflow-x:auto;scrollbar-width:none}
+nav button{flex:1 1 0;min-width:38px;padding:8px 0}
+.metric{border-top:1px solid var(--line);padding:12px 0}
 nav button{font-size:11px;padding:8px 0}
 .chip[aria-pressed="true"]{background:var(--tab);color:#fff;border-color:var(--tab)}
 .meal{border-top:1px solid var(--line);padding:12px 0}
@@ -130,17 +134,20 @@ nav button{font-size:11px;padding:8px 0}
 <script>
 (function(){
 var KEY='my-life-plan-v1', storageOk=true;
-var TABS=[['today','Today'],['diary','Diary'],['body','Body'],['diet','Diet'],['money','Money'],['career','Career'],['hustle','Hustle'],['plan','Plan']];
+var TABS=[['today','Today'],['track','Track'],['diary','Diary'],['body','Body'],['diet','Diet'],['money','Money'],['career','Career'],['hustle','Hustle'],['plan','Plan']];
 var tab='today';
 
 var HABITS=[
- ['workout','Workout or 30-min brisk walk'],
- ['steps','8-10k steps'],
  ['diet','Ate to plan: protein each meal, no sugary drinks, no late snacks'],
- ['water','3 litres of water'],
- ['study','2-3 hours of job prep'],
- ['post','30 min on LetterTales'],
- ['money','Logged today\'s spending']
+ ['money','Logged your spending today']
+];
+var TRACK=[
+ {id:'water',label:'Water',unit:'litres',target:3,quick:[[0.25,'+250 ml'],[0.5,'+500 ml']]},
+ {id:'steps',label:'Steps',unit:'steps',target:8000,quick:[[1000,'+1,000'],[2000,'+2,000']]},
+ {id:'workout',label:'Workout',unit:'minutes',target:40,quick:[[10,'+10 min'],[20,'+20 min']]},
+ {id:'study',label:'Job prep',unit:'minutes',target:165,quick:[[15,'+15 min'],[45,'+45 min']]},
+ {id:'post',label:'LetterTales',unit:'minutes',target:15,quick:[[5,'+5 min'],[15,'+15 min']]},
+ {id:'sleep',label:'Sleep',unit:'hours',target:7,quick:[]}
 ];
 var ROADMAP=[
  ['Weeks 1-2: Linux refresh',[['l1','Files, permissions, users, groups, sudo'],['l2','Processes, systemd services, journalctl, cron'],['l3','Package managers (yum, dnf, apt) and repositories'],['l4','Networking: ip, ss, curl, DNS, firewalld, SSH keys'],['l5','Storage: disks, LVM, mounts, fstab, df, du'],['l6','Troubleshooting drill: a slow server (top, free, vmstat, iostat, logs)'],['l7','Bash scripting: variables, loops, functions, grep, awk, sed'],['l8','Git and GitHub basics: commit, branch, pull request'],['l9','PROJECT 1 on GitHub: bash health-check and log report script, with a README']]],
@@ -157,7 +164,7 @@ var CATS=['Food','Travel','Bills','Debt EMI','Shopping','Health','Other'];
 var STATUS=['Applied','Interview','Offer','Rejected'];
 var IDEA_STEPS=['Idea','Ready','Done'];
 
-function defaults(){return {habits:{},diary:[],weights:[],height:'152',debts:[],expenses:[],goals:{emergency:{target:15000,saved:0},wedding:{budget:0,saved:0}},career:{role:'',done:{},apps:[]},ideas:[],lastBackup:0,outDays:['Wed','Sat','Sun'],why:'',photo:'',pref:'nv'}}
+function defaults(){return {habits:{},diary:[],weights:[],height:'152',debts:[],expenses:[],goals:{emergency:{target:15000,saved:0},wedding:{budget:0,saved:0}},career:{role:'',done:{},apps:[]},ideas:[],lastBackup:0,outDays:['Wed','Sat','Sun'],why:'',photo:'',pref:'nv',metrics:{},targets:{}}}
 function load(){try{var r=localStorage.getItem(KEY);if(r){var d=JSON.parse(r),b=defaults();for(var k in b){if(d[k]===undefined)d[k]=b[k]}return d}}catch(e){storageOk=false}return defaults()}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){storageOk=false}}
 var S=load();
@@ -171,7 +178,10 @@ function inr(n){return '\u20B9'+Math.round(n||0).toLocaleString('en-IN')}
 function fdate(d){return new Date(d+'T00:00').toLocaleDateString('en-IN',{day:'numeric',month:'short'})}
 function num(v){var n=parseFloat(v);return isNaN(n)?0:n}
 function daysAgo(n){var d=new Date();d.setDate(d.getDate()-n);return d.toLocaleDateString('en-CA')}
-function doneCount(d){var h=S.habits[d]||{};return HABITS.filter(function(x){return h[x[0]]}).length}
+function tgt(id){var v=S.targets[id];if(v!=null&&v>0)return v;for(var i=0;i<TRACK.length;i++)if(TRACK[i].id===id)return TRACK[i].target;return 1}
+function curVal(d,id){var v=(S.metrics[d]||{})[id];if(v!=null&&v!=='')return num(v);if((S.habits[d]||{})[id]===true)return tgt(id);return 0}
+function doneCount(d){var h=S.habits[d]||{},n=0;TRACK.forEach(function(x){if(curVal(d,x.id)>=tgt(x.id))n++});HABITS.forEach(function(x){if(h[x[0]])n++});return n}
+function fmtV(x,v){if(x.id==='steps')return Math.round(v).toLocaleString('en-IN')+' steps';if(x.id==='water')return (Math.round(v*100)/100)+' L';if(x.id==='sleep')return (Math.round(v*10)/10)+' h';return Math.round(v)+' min'}
 function streak(){var s=0,i=doneCount(todayStr())>=5?0:1;for(;;i++){if(doneCount(daysAgo(i))>=5)s++;else break;if(i>400)break}return s}
 function bar(p,cls){p=Math.max(0,Math.min(100,p));return '<div class="bar '+(cls||'')+'" role="progressbar" aria-valuenow="'+Math.round(p)+'" aria-valuemin="0" aria-valuemax="100"><i style="width:'+p+'%"></i></div>'}
 
@@ -243,6 +253,54 @@ function startBreath(){
   }
   step();
 }
+
+var trackRange=7, trackDate=daysAgo(1);
+function entryCard(d,title){
+  var m=S.metrics[d]||{},h=S.habits[d]||{};
+  var html='<div class="card"><h2>'+esc(title)+'</h2><p class="small muted">Type a number and tap Done, or use the quick buttons. The bar shows how close you are to your target.</p>';
+  TRACK.forEach(function(x){
+    var t=tgt(x.id),cur=curVal(d,x.id),diff=cur-t,val=(m[x.id]!=null)?m[x.id]:'';
+    html+='<div class="metric"><div class="row between"><b>'+x.label+'</b><span class="small"><b>'+fmtV(x,cur)+'</b> of '+fmtV(x,t)+'</span></div>'+bar(t?cur/t*100:0);
+    html+='<div class="small" style="margin:6px 0;color:'+(diff>=0?'var(--good)':'var(--muted)')+'">'+(diff>=0?'Target reached'+(diff>0?', '+fmtV(x,diff)+' extra':''):fmtV(x,-diff)+' to go')+'</div>';
+    html+='<div class="row"><input type="number" inputmode="decimal" step="any" min="0" style="width:120px" placeholder="0" value="'+esc(val)+'" data-change="metric" data-id="'+x.id+'" data-date="'+d+'" aria-label="'+x.label+' in '+x.unit+'"><span class="small muted">'+x.unit+'</span>';
+    x.quick.forEach(function(q){html+='<button class="ghost" data-act="add" data-id="'+x.id+'" data-date="'+d+'" data-amt="'+q[0]+'">'+q[1]+'</button>'});
+    html+='</div></div>';
+  });
+  HABITS.forEach(function(x){html+='<label class="check '+(h[x[0]]?'done':'')+'"><input type="checkbox" data-change="habit" data-id="'+x[0]+'" data-date="'+d+'" '+(h[x[0]]?'checked':'')+'><span>'+esc(x[1])+'</span></label>'});
+  return html+'</div>';
+}
+function bars(x,days){
+  var vals=days.map(function(d){return curVal(d,x.id)}),t=tgt(x.id),mx=Math.max(t*1.2,Math.max.apply(null,vals)*1.1)||1;
+  var W=600,H=130,P=8,top=10,base=H-22,bw=(W-2*P)/days.length,svg='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;margin-top:10px" role="img" aria-label="'+x.label+' per day compared with your target">';
+  var ty=base-(base-top)*t/mx;
+  vals.forEach(function(v,i){
+    var h=(base-top)*v/mx,xx=P+i*bw+bw*0.15,ww=bw*0.7,hh=v>0?Math.max(h,2):2;
+    svg+='<rect x="'+xx+'" y="'+(base-hh)+'" width="'+ww+'" height="'+hh+'" rx="3" style="fill:'+(v>=t?'var(--good)':'var(--tab)')+';opacity:'+(v>0?1:0.25)+'"/>';
+    if(days.length<=7)svg+='<text x="'+(xx+ww/2)+'" y="'+(H-6)+'" font-size="12" text-anchor="middle" style="fill:var(--muted)">'+new Date(days[i]+'T00:00').toLocaleDateString('en-IN',{weekday:'short'}).slice(0,2)+'</text>';
+    else if(i%5===0||i===days.length-1)svg+='<text x="'+(xx+ww/2)+'" y="'+(H-6)+'" font-size="11" text-anchor="middle" style="fill:var(--muted)">'+new Date(days[i]+'T00:00').getDate()+'</text>';
+  });
+  svg+='<line x1="'+P+'" x2="'+(W-P)+'" y1="'+ty+'" y2="'+ty+'" stroke-dasharray="6 5" style="stroke:var(--accent);stroke-width:2"/><text x="'+(W-P)+'" y="'+(ty-5)+'" font-size="12" text-anchor="end" style="fill:var(--muted)">Target</text></svg>';
+  return svg;
+}
+function vTrack(){
+  var N=trackRange,days=[];for(var i=N-1;i>=0;i--)days.push(daysAgo(i));
+  var total=TRACK.length+HABITS.length;
+  var good=days.filter(function(d){return doneCount(d)>=5}).length;
+  var html='<h1>Track</h1><p class="muted">Enter your numbers every day and compete with your targets.</p><div style="height:12px"></div>';
+  html+='<div class="card"><div class="row"><button class="chip" data-act="range" data-id="7" aria-pressed="'+(N===7)+'">Last 7 days</button><button class="chip" data-act="range" data-id="30" aria-pressed="'+(N===30)+'">Last 30 days</button></div><p style="margin-top:10px"><b>'+good+' of '+N+'</b> days you hit at least 5 of your '+total+' daily targets.</p></div>';
+  TRACK.forEach(function(x){
+    var t=tgt(x.id),logged=days.filter(function(d){return (S.metrics[d]||{})[x.id]!=null||(S.habits[d]||{})[x.id]===true});
+    var vals=logged.map(function(d){return curVal(d,x.id)});
+    var avg=vals.length?vals.reduce(function(a,b){return a+b},0)/vals.length:0;
+    var met=days.filter(function(d){return curVal(d,x.id)>=t}).length,best=vals.length?Math.max.apply(null,vals):0;
+    var tv=curVal(todayStr(),x.id),diff=tv-t;
+    html+='<div class="card"><h2>'+x.label+'</h2><div class="row"><div class="field"><span class="muted small">Target</span><b>'+fmtV(x,t)+'</b></div><div class="field"><span class="muted small">Average</span><b>'+(vals.length?fmtV(x,avg):'No data')+'</b></div><div class="field"><span class="muted small">Target met</span><b>'+met+' of '+N+' days</b></div><div class="field"><span class="muted small">Best day</span><b>'+(vals.length?fmtV(x,best):'-')+'</b></div></div>'+bars(x,days)+'<p class="small" style="margin-top:6px">Today: <b>'+fmtV(x,tv)+'</b> ('+(diff>=0?'+':'-')+fmtV(x,Math.abs(diff))+' against target)</p></div>';
+  });
+  html+='<div class="card"><h2>Missed a day? Fill it in</h2><div class="field" style="max-width:220px"><label for="td">Date</label><input id="td" type="date" max="'+todayStr()+'" value="'+trackDate+'" data-change="trackDate"></div></div>'+entryCard(trackDate,'Numbers for '+fdate(trackDate));
+  html+='<div class="card"><h2>My targets</h2><p class="small muted">Change any target. Your charts and streak use these numbers.</p>';
+  TRACK.forEach(function(x){html+='<div class="item"><label class="grow" for="tg'+x.id+'">'+x.label+' ('+x.unit+')</label><input id="tg'+x.id+'" type="number" inputmode="decimal" step="any" min="0" style="width:110px" value="'+tgt(x.id)+'" data-change="target" data-id="'+x.id+'"></div>'});
+  return html+'</div>';
+}
 function vDiet(){
   var todayKey=DAYS[(new Date().getDay()+6)%7], sel=dietSel||todayKey, m=MEALS[sel], out=S.outDays.indexOf(sel)>-1;
   var html='<h1>Diet</h1><p class="muted">Your hostel menu with the right portions, built for PCOD. Roughly 1,600 kcal a day if you follow them.</p><div style="height:12px"></div>';
@@ -277,11 +335,9 @@ function vToday(){
   if(nowM>=22*60+45&&doneCount(t)===0&&!S.diary.some(function(e){return e.date===t}))html+='<div class="warn"><b>It is past 10:45 PM.</b> Time to log your day: tick your checklist, write your diary and add today\'s spending.</div>';
   var hasData=S.diary.length||S.weights.length||S.debts.length||S.expenses.length;
   if(hasData&&(!S.lastBackup||Date.now()-S.lastBackup>7*864e5))html+='<div class="warn">You have not backed up in over a week. Open the Plan tab and tap Copy backup.</div>';
-  html+='<div class="hero"><div class="row between"><div><div class="big">'+n+'/'+HABITS.length+'</div><div class="muted">done today</div></div><div style="text-align:right"><div class="big">'+st+'</div><div class="muted">day streak (5+ done)</div></div></div><div class="week">'+strip+'</div></div>';
+  html+='<div class="hero"><div class="row between"><div><div class="big">'+n+'/'+(TRACK.length+HABITS.length)+'</div><div class="muted">done today</div></div><div style="text-align:right"><div class="big">'+st+'</div><div class="muted">day streak (5+ done)</div></div></div><div class="week">'+strip+'</div></div>';
   html+=calmCard();
-  html+='<div class="card"><h2>Today\'s checklist</h2>';
-  HABITS.forEach(function(x){html+='<label class="check '+(h[x[0]]?'done':'')+'"><input type="checkbox" data-change="habit" data-id="'+x[0]+'" '+(h[x[0]]?'checked':'')+'><span>'+esc(x[1])+'</span></label>'});
-  html+='</div>';
+  html+=entryCard(t,'Your numbers for today');
   html+='<div class="card"><h2>At a glance</h2><div class="row glance">';
   html+='<div class="field"><span class="muted small">Weight</span><b>'+(last?last+' kg':'Not logged')+'</b></div>';
   html+='<div class="field"><span class="muted small">Total debt</span><b>'+inr(S.debts.reduce(function(a,d){return a+num(d.amt)},0))+'</b></div>';
@@ -421,14 +477,14 @@ function vPlan(){
 }
 
 /* ---------- render ---------- */
-var VIEWS={today:vToday,diary:vDiary,body:vBody,diet:vDiet,money:vMoney,career:vCareer,hustle:vHustle,plan:vPlan};
+var VIEWS={today:vToday,track:vTrack,diary:vDiary,body:vBody,diet:vDiet,money:vMoney,career:vCareer,hustle:vHustle,plan:vPlan};
 function render(keepScroll){
   if(breathTimer){clearTimeout(breathTimer);breathTimer=null}
   var y=window.scrollY;
   var warn=storageOk?'':'<div class="warn">This browser is blocking saving, so your entries will be lost when you close the page. Try opening the link in Chrome or Safari, or use the backup box in Plan.</div>';
   document.getElementById('app').innerHTML=warn+VIEWS[tab]();
   document.body.setAttribute('data-tab',tab);
-  var NC={today:'#7C5CFC',diary:'#E64FA0',body:'#14A38B',diet:'#2DB36B',money:'#D98A00',career:'#2F8BF5',hustle:'#F2617A',plan:'#7C5CFC'};
+  var NC={track:'#0FA3B1',today:'#7C5CFC',diary:'#E64FA0',body:'#14A38B',diet:'#2DB36B',money:'#D98A00',career:'#2F8BF5',hustle:'#F2617A',plan:'#7C5CFC'};
   document.getElementById('nav').innerHTML=TABS.map(function(t){return '<button data-act="tab" data-id="'+t[0]+'" style="--c:'+NC[t[0]]+'" aria-current="'+(t[0]===tab)+'">'+t[1]+'</button>'}).join('');
   if(tab==='diary')document.getElementById('dlist').innerHTML=diaryList('');
   if(tab==='plan'){var bc=Object.assign({},S);delete bc.photo;document.getElementById('bk').value=JSON.stringify(bc)}
@@ -467,6 +523,8 @@ document.addEventListener('click',function(e){
   else if(a==='breathe'){startBreath();return}
   else if(a==='rmPhoto'){S.photo=''}
   else if(a==='pref'){S.pref=id}
+  else if(a==='range'){trackRange=+id}
+  else if(a==='add'){var dt=b.dataset.date||todayStr(),cv=curVal(dt,id);S.metrics[dt]=S.metrics[dt]||{};S.metrics[dt][id]=Math.round((cv+parseFloat(b.dataset.amt))*100)/100;if(S.habits[dt])delete S.habits[dt][id]}
   else if(a==='dietDay'){dietSel=id}
   else if(a==='tt'){ttMode=id}
   else if(a==='outDay'){var oi=S.outDays.indexOf(id);if(oi>-1)S.outDays.splice(oi,1);else S.outDays.push(id)}
@@ -498,7 +556,10 @@ document.addEventListener('change',function(e){
     var fr=new FileReader();
     fr.onload=function(){var im=new Image();im.onload=function(){var r=Math.min(1,720/im.width),cv=document.createElement('canvas');cv.width=Math.round(im.width*r);cv.height=Math.round(im.height*r);cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);S.photo=cv.toDataURL('image/jpeg',0.72);save();render(true)};im.src=fr.result};
     fr.readAsDataURL(f);return}
-  if(c==='habit'){var t=todayStr();S.habits[t]=S.habits[t]||{};S.habits[t][id]=el.checked}
+  if(c==='metric'){var dt=el.dataset.date||todayStr(),raw=el.value.trim();S.metrics[dt]=S.metrics[dt]||{};if(raw==='')delete S.metrics[dt][id];else S.metrics[dt][id]=Math.max(0,num(raw));if(S.habits[dt])delete S.habits[dt][id]}
+  if(c==='target'){var nv=num(el.value);if(nv>0)S.targets[id]=nv;else delete S.targets[id]}
+  if(c==='trackDate'){if(el.value)trackDate=el.value;render(true);return}
+  if(c==='habit'){var t=el.dataset.date||todayStr();S.habits[t]=S.habits[t]||{};S.habits[t][id]=el.checked}
   if(c==='road')S.career.done[id]=el.checked;
   if(c==='role'){S.career.role=el.value;save();return}
   if(c==='height'){S.height=el.value}
