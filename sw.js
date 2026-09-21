@@ -1,5 +1,5 @@
 // Bump this number whenever you upload a new version of the app.
-const CACHE = 'life-plan-v5';
+const CACHE = 'life-plan-v6';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
